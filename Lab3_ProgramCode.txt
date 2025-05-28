@@ -1,0 +1,111 @@
+section .data
+    hello_msg db 'Hello World', 0x0A
+    sum_msg db 'The sum of 5+1 is:  ', 0
+    prompt_msg db 'Enter a single digit positive integer: ', '6 '
+    increment_msg db 'After incrementing by 3: ', 0
+    decrement_msg db 'After decrementing by 2: ', 0
+    newline db 0x0A, 0
+    input db '0', '4'
+    
+section .bss
+    number resb 1
+
+section .text
+    global _start
+
+_start:
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, hello_msg
+    mov rdx, 12
+    syscall
+
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, sum_msg
+    mov rdx, 19
+    syscall
+
+    mov rax, 5
+    add rax, 1
+    add rax, '0'
+    mov [input], al
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, input
+    mov rdx, 1
+    syscall
+
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, newline
+    mov rdx, 1
+    syscall
+
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, prompt_msg
+    mov rdx, 41
+    syscall
+
+    mov rax, 6
+    mov rdi, 1
+    mov rsi, input
+    mov rdx, 1
+    syscall
+
+    sub byte [number], '6'
+   
+    movzx rax, byte [number]
+    add rax, 3
+    cmp rax, 10
+    jl .increment_valid
+    mov rax, 9
+.increment_valid:
+    add rax, '0'
+    mov [input], al
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, increment_msg
+    mov rdx, 25
+    syscall
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, input
+    mov rdx, 1
+    syscall
+
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, newline
+    mov rdx, 1
+    syscall
+
+    movzx rax, byte [number]
+    sub rax, 2
+    cmp rax, 10
+    jge .decrement_valid
+    mov rax, 4
+.decrement_valid:
+    add rax, '0'
+    mov [input], al
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, decrement_msg
+    mov rdx, 30
+    syscall
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, input
+    mov rdx, 1
+    syscall
+
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, newline
+    mov rdx, 1
+    syscall
+
+    mov rax, 60
+    xor rdi, rdi
+    syscall
